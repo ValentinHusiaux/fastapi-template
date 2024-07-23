@@ -1,11 +1,8 @@
 import os
 from fastapi import FastAPI, File, UploadFile, HTTPException
 import boto3
-from dotenv import load_dotenv
 from botocore.exceptions import NoCredentialsError
 from fastapi.responses import StreamingResponse
-
-load_dotenv()
 
 app = FastAPI()
 
@@ -26,7 +23,7 @@ async def upload_file(file: UploadFile = File(...)):
         return {"filename": file.filename}
     except NoCredentialsError:
         raise HTTPException(status_code=400, detail="Credentials not available")
-    
+
 @app.get("/download/{filename}")
 async def download_file(filename: str):
     try:
