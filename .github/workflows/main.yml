@@ -11,31 +11,3 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
-
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.x'
-
-    - name: Install dependencies
-      run: |
-        sudo python -m pip install --upgrade pip
-        sudo pip install -r requirements.txt
-
-    - name: Run tests
-      run: |
-        sudo pytest
-
-    - name: Deploy to EC2
-      env:
-        SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
-        HOST: ${{ secrets.EC2_HOST }}
-        USER: ${{ secrets.EC2_USER }}
-      run: |
-        echo "$SSH_PRIVATE_KEY" > private_key.pem
-        chmod 600 private_key.pem
-        ssh -i private_key.pem $USER@$HOST 'cd /path/to/your/app && git pull origin main && sudo systemctl restart your-service'
