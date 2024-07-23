@@ -48,11 +48,13 @@ jobs:
         ssh -o StrictHostKeyChecking=no -i key.pem $EC2_USER@$EC2_HOST << 'EOF'
           cd /home/ec2-user/fastapi-template || exit
 
-          # Arrêter et supprimer le conteneur existant
-          docker stop my-fastapi-app || true
-          docker rm my-fastapi-app || true
+          # Arrêter tous les conteneurs Docker en cours
+          docker stop $(docker ps -q) || true
 
-          # Construire et exécuter le conteneur
+          # Supprimer tous les conteneurs Docker arrêtés
+          docker rm $(docker ps -a -q) || true
+
+          # Construire et exécuter le nouveau conteneur
           docker build -t my-fastapi-app .
           docker run -d --name my-fastapi-app -p 80:8000 my-fastapi-app
         EOF
