@@ -13,10 +13,8 @@ app = FastAPI()
 # Initialiser le client S3
 s3 = boto3.client(
     's3',
-    #aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
-    #aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY')
-    aws_access_key_id='AKIA3FLD47OYHMO46DI4',
-    aws_secret_access_key='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'
+    aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
+    aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY')
 )
 
 @app.get("/ping")
@@ -26,8 +24,7 @@ async def ping():
 @app.post("/upload")
 async def upload_file(file: UploadFile = File(...)):
     try:
-        #s3.upload_fileobj(file.file, os.getenv('AWS_S3_BUCKET_NAME'), file.filename)
-        s3.upload_fileobj(file.file, os.getenv('livecampusbucketfastapi'), file.filename)
+        s3.upload_fileobj(file.file, os.getenv('AWS_S3_BUCKET_NAME'), file.filename)
         return {"filename": file.filename}
     except NoCredentialsError:
         raise HTTPException(status_code=400, detail="Credentials not available")
