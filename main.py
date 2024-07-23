@@ -33,3 +33,4 @@ async def download_file(filename: str):
         raise HTTPException(status_code=400, detail="Credentials not available")
     except s3.exceptions.NoSuchKey:
         raise HTTPException(status_code=404, detail="File not found")
+        
