@@ -1,6 +1,11 @@
 import pytest
+import sys
+import os
 from httpx import AsyncClient, ASGITransport
-from ..main import app
+
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+from main import app
 
 @pytest.mark.asyncio
 async def test_ping():
