@@ -56,5 +56,5 @@ jobs:
 
           # Construire et exécuter le nouveau conteneur
           docker build -t my-fastapi-app .
-          docker run -d --name my-fastapi-app -p 80:8000 my-fastapi-app
+          docker run -d --name my-fastapi-app -p 8000:8000 my-fastapi-app
         EOF
