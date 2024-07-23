@@ -16,7 +16,7 @@ s3 = boto3.client(
     #aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
     #aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY')
     aws_access_key_id='AKIA3FLD47OYHMO46DI4',
-    aws_secret_access_key='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')
+    aws_secret_access_key='CM9ao2Wn9Rh5vmDk+5Q19ahzODoFl4RMwvH4UZ6z'
 )
 
 @app.get("/ping")
