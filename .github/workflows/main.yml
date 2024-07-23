@@ -43,6 +43,7 @@ jobs:
         # Déployer sur EC2
         ssh -o StrictHostKeyChecking=no -i key.pem $EC2_USER@$EC2_HOST << 'EOF'
           cd /home/ec2-user/fastapi-template
+          git pull
 
           # Arrêter tous les conteneurs Docker en cours
           docker stop $(docker ps -q) || true
