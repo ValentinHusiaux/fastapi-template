@@ -3,9 +3,14 @@ from fastapi import FastAPI, File, UploadFile, HTTPException
 import boto3
 from botocore.exceptions import NoCredentialsError
 from fastapi.responses import StreamingResponse
+from dotenv import load_dotenv
+
+# Charger les variables d'environnement à partir du fichier .env
+load_dotenv()
 
 app = FastAPI()
 
+# Initialiser le client S3
 s3 = boto3.client(
     's3',
     aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
@@ -33,4 +38,3 @@ async def download_file(filename: str):
         raise HTTPException(status_code=400, detail="Credentials not available")
     except s3.exceptions.NoSuchKey:
         raise HTTPException(status_code=404, detail="File not found")
-        
