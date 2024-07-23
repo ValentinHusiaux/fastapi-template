@@ -35,26 +35,4 @@ jobs:
         SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
         EC2_HOST: ${{ secrets.EC2_HOST }}
         EC2_USER: ${{ secrets.EC2_USER }}
-      run: |
-        # Installe les outils nécessaires pour SSH et rsync
-        sudo apt-get update
-        sudo apt-get install -y openssh-client
-
-        # Configure la clé SSH
-        echo "$SSH_PRIVATE_KEY" > private_key.pem
-        chmod 600 private_key.pem
-
-        # Copie les fichiers nécessaires sur l'instance EC2
-        rsync -avz -e "ssh -i private_key.pem -o StrictHostKeyChecking=no" . $EC2_USER@$EC2_HOST:/path/to/deploy/
-
-        # Connecte-toi à l'instance EC2 et exécute les commandes de déploiement
-        ssh -i private_key.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST << 'EOF'
-          cd /path/to/deploy/
-          source /path/to/venv/bin/activate
-          pip install -r requirements.txt
-          # Redémarrer l'application si nécessaire (par exemple avec Gunicorn ou Docker)
-          sudo systemctl restart your-service
-        EOF
-
-        # Nettoie la clé SSH
-        rm -f private_key.pem
+     
