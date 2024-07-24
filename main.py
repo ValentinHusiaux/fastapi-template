@@ -82,7 +82,7 @@ async def delete_file(file_id: str):
         # Retrieve the item from DynamoDB to get the filename
         response = dynamodb.get_item(
             TableName="FileUpload",
-            Key={'id': {'S': file_id}}
+            Key={'file_id': {'S': file_id}}
         )
 
         # Check if the file exists in DynamoDB
