@@ -48,7 +48,7 @@ async def upload_file(file: UploadFile = File(...)):
             Item={
                 'file_id': file_id,
                 'filename': file.filename,
-                'size': file.spool_max_size,
+                'size': file.size,
                 'upload_date': str(datetime.now()),
                 'delete_date': None
             }
