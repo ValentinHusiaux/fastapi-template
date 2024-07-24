@@ -1,7 +1,7 @@
 import os
 import uuid
 from datetime import datetime
-from fastapi import FastAPI, File, UploadFile, HTTPException, Request
+from fastapi import FastAPI, File, UploadFile, HTTPException, Request, Depends
 import boto3
 from botocore.exceptions import NoCredentialsError
 from fastapi.responses import StreamingResponse
@@ -39,7 +39,7 @@ class UploadMetadata(BaseModel):
     description: str
 
 @app.post("/upload")
-async def upload_file(file: UploadFile = File(...), metadata: UploadMetadata):
+async def upload_file(metadata: UploadMetadata, file: UploadFile = File(...)):
     try:
         file_id = str(uuid.uuid4())
         s3.upload_fileobj(file.file, os.getenv('AWS_S3_BUCKET_NAME'), file.filename)
