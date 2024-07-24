@@ -122,9 +122,16 @@ async def delete_file(file_id: str):
 @app.get("/files")
 async def list_files():
     try:
+        # Scan the table to get all items where delete_date does not exist
         response = table_upload.scan(
-            FilterExpression="attribute_not_exists(delete_date)"
+            FilterExpression="attribute_not_exists(#dd)",
+            ExpressionAttributeNames={"#dd": "delete_date"}
         )
+        # Return the items found
         return {"files": response['Items']}
     except NoCredentialsError:
         raise HTTPException(status_code=400, detail="Credentials not available")
+    except Exception as e:
+        # Log the error and return a 500 response
+        print(f"Error scanning DynamoDB table: {e}")
+        raise HTTPException(status_code=500, detail="Internal Server Error")
