@@ -39,7 +39,7 @@ class UploadMetadata(BaseModel):
     description: str
 
 @app.post("/upload")
-async def upload_file(metadata: UploadMetadata, file: UploadFile = File(...)):
+async def upload_file(file: UploadFile = File(...)):
     try:
         file_id = str(uuid.uuid4())
         s3.upload_fileobj(file.file, os.getenv('AWS_S3_BUCKET_NAME'), file.filename)
@@ -49,7 +49,6 @@ async def upload_file(metadata: UploadMetadata, file: UploadFile = File(...)):
                 'file_id': file_id,
                 'filename': file.filename,
                 'size': file.spool_max_size,
-                'description': metadata.description,
                 'upload_date': str(datetime.now()),
                 'delete_date': None
             }
