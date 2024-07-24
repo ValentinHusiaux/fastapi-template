@@ -80,8 +80,7 @@ async def download_file(filename: str, request: Request):
 async def delete_file(file_id: str):
     try:
         # Retrieve the item from DynamoDB to get the filename
-        response = dynamodb.get_item(
-            TableName="FileUpload",
+        response = FileUpload.get_item(
             Key={'file_id': {'S': file_id}}
         )
 
