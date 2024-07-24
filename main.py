@@ -112,7 +112,7 @@ async def delete_file(file_id: str):
             ExpressionAttributeValues={':d': str(datetime.now())},
             ReturnValues="UPDATED_NEW"
         )
-       return {"deleted": filename, "response": response}
+        return {"deleted": filename, "response": response}
     except NoCredentialsError:
         raise HTTPException(status_code=400, detail="Credentials not available")
     except s3.exceptions.NoSuchKey:
