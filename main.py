@@ -81,7 +81,7 @@ async def delete_file(file_id: str):
     try:
         # Retrieve the item from DynamoDB to get the filename
         response = table_upload.get_item(
-            Key={'file_id': {'S': file_id}}
+            Key={'file_id': file_id}
         )
 
         # Check if the file exists in DynamoDB
@@ -90,16 +90,17 @@ async def delete_file(file_id: str):
 
         # Extract the filename from the DynamoDB response
         item = response['Item']
-        filename = item.get('filename', {}).get('S')
+        filename = item.get('filename')
         
         if not filename:
             raise HTTPException(status_code=404, detail="Filename not found in DynamoDB")
 
-        
+        # Delete the object from S3
         s3.delete_object(Bucket=os.getenv('AWS_S3_BUCKET_NAME'), Key=filename)
         
+        # Update the delete_date in DynamoDB
         response = table_upload.update_item(
-            Key={'filename': filename},
+            Key={'file_id': file_id},
             UpdateExpression="set delete_date = :d",
             ExpressionAttributeValues={':d': str(datetime.now())},
             ReturnValues="UPDATED_NEW"
@@ -109,6 +110,7 @@ async def delete_file(file_id: str):
         raise HTTPException(status_code=400, detail="Credentials not available")
     except s3.exceptions.NoSuchKey:
         raise HTTPException(status_code=404, detail="File not found")
+
 
 @app.get("/files")
 async def list_files():
