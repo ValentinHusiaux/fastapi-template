@@ -2,6 +2,10 @@ import pytest
 import sys
 import os
 from httpx import AsyncClient, ASGITransport
+from dotenv import load_dotenv
+
+# Charger les variables d'environnement à partir du fichier .env
+load_dotenv()
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
