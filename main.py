@@ -76,9 +76,27 @@ async def download_file(filename: str, request: Request):
     except s3.exceptions.NoSuchKey:
         raise HTTPException(status_code=404, detail="File not found")
 
-@app.delete("/delete/{filename}")
-async def delete_file(filename: str):
+@app.delete("/delete/{file_id}")
+async def delete_file(file_id: str):
     try:
+        # Retrieve the item from DynamoDB to get the filename
+        response = dynamodb.get_item(
+            TableName="FileUpload",
+            Key={'id': {'S': file_id}}
+        )
+
+        # Check if the file exists in DynamoDB
+        if 'Item' not in response:
+            raise HTTPException(status_code=404, detail="File not found in DynamoDB")
+
+        # Extract the filename from the DynamoDB response
+        item = response['Item']
+        filename = item.get('filename', {}).get('S')
+        
+        if not filename:
+            raise HTTPException(status_code=404, detail="Filename not found in DynamoDB")
+
+        
         s3.delete_object(Bucket=os.getenv('AWS_S3_BUCKET_NAME'), Key=filename)
         
         response = table_upload.update_item(
