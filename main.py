@@ -97,6 +97,8 @@ async def delete_file(file_id: str):
 
         # Delete the object from S3
         s3.delete_object(Bucket=os.getenv('AWS_S3_BUCKET_NAME'), Key=filename)
+
+        return {"deleted": filename, "response": response}
         
         # Update the delete_date in DynamoDB
         response = table_upload.update_item(
@@ -105,7 +107,7 @@ async def delete_file(file_id: str):
             ExpressionAttributeValues={':d': str(datetime.now())},
             ReturnValues="UPDATED_NEW"
         )
-        return {"deleted": filename, "response": response}
+       
     except NoCredentialsError:
         raise HTTPException(status_code=400, detail="Credentials not available")
     except s3.exceptions.NoSuchKey:
