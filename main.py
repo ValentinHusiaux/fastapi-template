@@ -122,10 +122,11 @@ async def delete_file(file_id: str):
 @app.get("/files")
 async def list_files():
     try:
-        # Scan the table to get all items where delete_date does not exist
+        # Scan the table to get all items where delete_date does not exist or is null
         response = table_upload.scan(
-            FilterExpression="attribute_not_exists(#dd)",
-            ExpressionAttributeNames={"#dd": "delete_date"}
+            FilterExpression="attribute_not_exists(#dd) OR #dd = :null_value",
+            ExpressionAttributeNames={"#dd": "delete_date"},
+            ExpressionAttributeValues={":null_value": {"NULL": True}}
         )
         # Return the items found
         return {"files": response['Items']}
